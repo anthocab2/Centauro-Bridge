@@ -1,0 +1,8 @@
+profile_id = "mvp"
+provider = "massive"
+destination = "atlas"
+destination_id = "atlas-mvp"
+database = "centauro_bridge_mvp"
+declared_plan = "unknown"
+massive_api_key_env = "MASSIVE_API_KEY"
+mongodb_uri_env = "MONGODB_URI"

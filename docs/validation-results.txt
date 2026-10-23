@@ -1,0 +1,34 @@
+HBT-CEN-001 — validation evidence
+Date: 2026-10-22
+Platform executed: Windows; Python 3.11.15
+Source: anthocab2/centauro-atlas-bridge@ca9e9270d4553ebaea80096e019974eae697fe3e
+
+uv sync --locked --python 3.11
+Resolved 24 packages; checked 24 packages. Exit 0.
+
+uv run pytest -q -ra
+140 passed, 6 skipped in 28.04s. Exit 0.
+94 preserved source unit regressions + 46 new application cases.
+Skipped: the six original tests/integration Atlas tests, gated by
+CENTAURO_REAL_ATLAS=1 and credentials for a dedicated MVP database.
+No integration tests were removed. No real Massive/Atlas run was performed.
+
+uv run ruff check .
+All checks passed! Exit 0.
+
+git diff --check
+PASS, no output, exit 0 after removing two extra trailing blank lines.
+The initial repository has intent-to-add entries so all delivered files are checked.
+
+Source provenance check
+44 unchanged files match original Git blob hashes byte-for-byte.
+Three selected files intentionally adapted: pyproject.toml, uv.lock, config.py.
+
+uv run centauro-bridge --help
+Exit 0; start, status, jobs and resume commands available.
+
+Scope of evidence
+Real worker processes and OS locks executed on Windows.
+Real extraction and verification code exercised with controlled HTTP and mongomock.
+No real credential values present in the process environment for this delivery.
+Live Massive + Atlas validation and POSIX execution remain pending.

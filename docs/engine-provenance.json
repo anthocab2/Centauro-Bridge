@@ -1,0 +1,241 @@
+{
+  "repository": "https://github.com/anthocab2/centauro-atlas-bridge",
+  "commit": "ca9e9270d4553ebaea80096e019974eae697fe3e",
+  "files": [
+    {
+      "path": "pyproject.toml",
+      "git_blob_sha": "e57c89ef78a4e389ed6392c8437940bb336becab",
+      "adaptation": "Product metadata, core dependencies, CLI and test configuration."
+    },
+    {
+      "path": "scripts/real_massive_pagination_test.py",
+      "git_blob_sha": "7f4d74ff7ab1e0a57bfb2c11b6cbdd7e5b707cfa",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/__init__.py",
+      "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/atlas/__init__.py",
+      "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/atlas/client.py",
+      "git_blob_sha": "b069f18fb63128c0df7799f58530a17966efb39a",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/atlas/store.py",
+      "git_blob_sha": "0589323b3b388c4d6c7bbbb72e6c37f123299a8a",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/cli.py",
+      "git_blob_sha": "64a8e1e978c9e08a92e207de3a0b56b579d6cd10",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/config.py",
+      "git_blob_sha": "0613cba93a7ca368ec417310ea1d3799cc8f1586",
+      "adaptation": "Skip dotenv when CENTAURO_EXPLICIT_CONFIG=1 in a configured worker."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/__init__.py",
+      "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/checkpoints.py",
+      "git_blob_sha": "c74dc9ca20ad33ec22d6557bffb9e607de14e103",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/chunking.py",
+      "git_blob_sha": "1974513481c9300d73847417870a2187632aaffe",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/http_client.py",
+      "git_blob_sha": "6e13cef16d3b06ed965e34e29a20d4c85a3e5004",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/page_ledger.py",
+      "git_blob_sha": "50afde7d79a8266a9c47622d88da5536daef6820",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/pipeline.py",
+      "git_blob_sha": "bea01c9789efefb0df059a2ebab08f08184a9a2b",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/raw.py",
+      "git_blob_sha": "e58784e69669f096a60e20705b839e5e48582892",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/recovery.py",
+      "git_blob_sha": "a13d11c91fc4dba54731ed8d96f19a7490af9faa",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/runs.py",
+      "git_blob_sha": "8c2b8df06e348624fcf6438c635305fe49f476cd",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/ingestion/verification.py",
+      "git_blob_sha": "952e40a3c04471051134029460fe864591761c7d",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/models/__init__.py",
+      "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "src/centauro_atlas_bridge/sources/massive.py",
+      "git_blob_sha": "e8e36a42f175b5998a957eb13fe21c804cce784c",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/__init__.py",
+      "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/integration/__init__.py",
+      "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/integration/test_atlas_connection.py",
+      "git_blob_sha": "89b03bb6c7e9e9adae56dd56f729953578c4c32e",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/integration/test_atlas_store.py",
+      "git_blob_sha": "a5385b8c8c3fd7799610b1e2d8c5e08f85e5db4b",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/integration/test_checkpoints.py",
+      "git_blob_sha": "6191ffddc9c70d8ba4e4d296d2a0b28c192d6b5d",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/integration/test_ingestion_runs.py",
+      "git_blob_sha": "46c76e168f98fd9870183e1e07d028f5b65dcdec",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/integration/test_massive_recovery.py",
+      "git_blob_sha": "ce8c70b91e2161911dda6689baa81de3ee2872d7",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/integration/test_raw_ingestion.py",
+      "git_blob_sha": "7bf748d8cfb4de264894e1ee47c2cae900a1a2be",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/__init__.py",
+      "git_blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_chunking.py",
+      "git_blob_sha": "6b01cd62bd17c3fcd264ae7d45d1885d7f5cca57",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_cli.py",
+      "git_blob_sha": "57b098d75331b8aa74daa1c98b41a4517e693ba3",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_http_client.py",
+      "git_blob_sha": "fe5e3664deb1623ad2cd7119d40573857f374c5f",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_massive_completion_recovery.py",
+      "git_blob_sha": "91d0725e02f57867770daee6712acc018542ed66",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_massive_pagination.py",
+      "git_blob_sha": "e9b28e2f9ea673d422a059b7198c511d0b70efa8",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_massive_resume.py",
+      "git_blob_sha": "5c1345b9dccbbf4721747016564a7298994952b8",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_massive_security.py",
+      "git_blob_sha": "a349552ff8328c4b54adf8a78b9be96a584ab88f",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_massive_source.py",
+      "git_blob_sha": "5f113aa8a4b65d1af8f6d463af670ce60f559daa",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_massive_validation.py",
+      "git_blob_sha": "f965d1c59d2ce5dedbb52414174fdfe488518e81",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_page_ledger.py",
+      "git_blob_sha": "e00b8b9e27be1be8b23ec2185c29572bd9228b29",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_pipeline.py",
+      "git_blob_sha": "9f2a0a1a8906f51caba04df26e948ce4475dba6d",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_raw_ingestion.py",
+      "git_blob_sha": "bf7a23426ea4a68b7517e6f6c099c3f382b335cf",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_real_massive_finalization_recovery.py",
+      "git_blob_sha": "5a3345ae8b177766087020cafea9fb6bc864d0a2",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_real_massive_pagination_recovery.py",
+      "git_blob_sha": "c3ba6d33c6a4ac6958d0594e4d56e78013cc2031",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_recovery.py",
+      "git_blob_sha": "cdf015718ce90e31285ec80b6af2a179b7e87b3f",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_verification.py",
+      "git_blob_sha": "0b66283899215ac8514e63e90457850be069d934",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "tests/unit/test_verification_provenance.py",
+      "git_blob_sha": "4624b9cd6df5ef5742741636a5e9d49baa77551f",
+      "adaptation": "Unchanged; exact original Git blob."
+    },
+    {
+      "path": "uv.lock",
+      "git_blob_sha": "2cb89dfbaafe35faabfdaa2fd5d5abd2ba454a8c",
+      "adaptation": "Regenerated for the product dependencies on Python 3.11."
+    }
+  ]
+}
