@@ -9,6 +9,9 @@ dependencies = [
     "python-dotenv>=1.2.3",
     "portalocker>=3.2,<4",
     "psutil>=7,<8",
+    "streamlit>=1.50,<2",
+    "plotly>=6,<8",
+    "pandas>=2.2,<3",
 ]
 
 [project.scripts]

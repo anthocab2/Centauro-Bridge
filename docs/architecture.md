@@ -1,4 +1,4 @@
-# Application Core
+# Arquitectura de Centauro Bridge
 
 ## Recorrido
 
@@ -32,7 +32,7 @@ El estado está fuera del código y sobrevive al cierre/reinicio del coordinador
 
 ## Contratos y resultados
 
-Sólo se introducen `Profile`, `Request`, `Coordinator`, `State` y el adaptador concreto `MassiveAtlasAdapter`. El motor se invoca con `ticker`, fechas y `adjusted`; conserva exactamente `build_extraction_id` y los algoritmos de ingesta/hash del origen. Un fallo antes del recibo puede dar `worker_start`; si no llega un recibo, `worker_start_unknown` indica que se debe consultar el estado antes de decidir otro intento.
+HBT-CEN-001 introduce `Profile`, `Request`, `Coordinator`, `State` y el adaptador concreto `MassiveAtlasAdapter`. El motor se invoca con `ticker`, fechas y `adjusted`; conserva exactamente `build_extraction_id` y los algoritmos de ingesta/hash del origen. Un fallo antes del recibo puede dar `worker_start`; si no llega un recibo, `worker_start_unknown` indica que se debe consultar el estado antes de decidir otro intento.
 
 El adaptador inspecciona run/checkpoint para distinguir `new`, `resumed`, `reused` y `recovered`. No guarda otra vez el resultado del extractor. Después de su retorno registra ejecución y almacenamiento completados, pasa a `verifying` y exige `verified is True` del verificador para publicar éxito. Una verificación fallida conserva ejecución/almacenamiento completados y registra estado `failed`, verificación `invalid`. Si se pierde el trabajador durante la verificación, no se atribuye verificación al trabajo interrumpido.
 
@@ -48,4 +48,38 @@ El trabajador no emite logs/trazas del motor a la CLI: desactiva logging y desca
 
 El alcance es una instalación local por usuario y directorio estable. El bloqueo no es distribuido. Una actualización debe conservar el estado y esperar que termine el trabajador antes de reemplazar dependencias. No hay cola, cancelación, watchdog que mate trabajos lentos, servicio de secretos ni soporte multiusuario. Los reintentos/esperas HTTP existentes se conservan. El sistema no declara interrupción por lentitud mientras el proceso siga vivo.
 
-HBT-CEN-002 debe consumir `start`, `resume` y `status` del core, mostrar sus estados y mantener un único directorio de instalación. Debe evitar importar directamente el extractor desde la interfaz. Dashboard, lector analítico e IA siguen pendientes.
+## Dashboard local — HBT-CEN-002
+
+`dashboard.py` inicia `dashboard/app.py`. `DashboardSession` es una fachada delgada de presentación: envía exclusivamente a `Coordinator.start()` y `Coordinator.resume()`; `refresh()` llama a `Coordinator.state.status()`. No se modificaron coordinador, bloqueo, SQLite, adaptador ni protocolo del trabajador para esta entrega.
+
+Cada envío consume un token de sesión antes de llamar al core. Reruns, consultas y finalización del trabajo no lo rearman: se requiere **Preparar otra solicitud**. Dos sesiones continúan coordinadas por el bloqueo existente. `worker_start_unknown` provoca una consulta inmediata y exige una consulta explícita del usuario antes de habilitar otro intento. Un reinicio del navegador pierde el perfil de sesión, pero conserva los trabajos en el mismo directorio estable.
+
+El perfil inmutable y los campos protegidos viven en `st.session_state`; no se modifica `os.environ` ni se usan cachés compartidas. Cambiar el perfil está bloqueado mientras haya trabajo activo. La aplicación mantiene los errores del proveedor fuera de los mensajes y no representa el perfil completo en salidas públicas. Los campos protegidos y la memoria de sesión contienen las credenciales necesarias para operar; no son un almacén de secretos persistente.
+
+`application/connections.py` crea clientes explícitos. El ping Atlas sólo confirma esa conexión; lectura y escritura permanecen desconocidas. La prueba Massive usa un día, `limit=1`, un timeout y ninguna paginación, redirección ni escritura. Confirma sólo la operación solicitada, incluso si la respuesta válida está vacía. Plan declarado, capacidad observada y plan exacto desconocido son conceptos separados.
+
+## Lector y frontera de integridad
+
+```text
+Perfil explícito + trabajo seleccionado
+  -> comprobar perfil público / fingerprint / proveedor / solicitud / extraction_id
+  -> cliente Atlas explícito y base del perfil
+  -> run + ledger de esa extracción
+  -> raw limitado a los canonical_document_ids del ledger
+  -> verify_evidence sobre los bytes leídos
+  -> validación OHLCV / duplicados / orden UTC
+  -> volver a consultar run y ledger; rechazar cambios durante la lectura
+  -> CanonicalDataset inmutable -> un DataFrame filtrado -> tabla + Plotly
+```
+
+`reading/canonical.py` no importa el extractor ni la configuración global. Antes de crear un cliente exige coincidencia exacta del perfil público y calcula la identidad esperada mediante el algoritmo original. El run debe corresponder a Massive, endpoint y parámetros originales. La evidencia inválida, incompleta, alterada o en conflicto bloquea la lectura, aunque SQLite diga `verified`. Se seleccionan sólo documentos canónicos: capturas alternativas no entran en la reconstrucción ni en el gráfico.
+
+Para reutilizar la verificación sin sus efectos secundarios, `ingestion/identity.py` contiene los algoritmos puros de identidad/hash extraídos sin cambios. `ingestion/integrity.py` contiene el cuerpo puro original de verificación. Los módulos originales conservan sus nombres importables; `verification.verify_extraction()` sigue consultando Atlas, llama a la función pura y guarda el resultado como antes. El lector llama directamente a `verify_evidence()` y no escribe en Atlas ni SQLite. Las regresiones originales continúan ejecutando las rutas antiguas.
+
+Cada barra exige timestamp entero en milisegundos convertido a UTC, OHLCV numéricos finitos (sin booleanos, cadenas ni coerción), volumen no negativo y límites OHLC consistentes. Se ordena por timestamp. Barras con igual timestamp y todos los valores OHLCV iguales se consolidan: el conteo de duplicados y todas las páginas de origen quedan registrados. Campos opcionales ajenos a OHLCV no participan en esa igualdad. Cualquier diferencia OHLCV para el mismo timestamp produce `bar_conflict`; no se elige una versión arbitraria. No se rellenan fechas ni se fabrican barras.
+
+El dataset conserva solicitud, proveedor, ajuste, fingerprint, páginas, hashes, IDs canónicos, fechas de captura disponibles, instante de lectura y referencia de snapshot. `bar_count` cuenta las barras reconstruidas y consolidadas; no modifica el `bar_count=null` histórico del core. Un resultado vacío mantiene referencia y capturas y muestra una explicación específica.
+
+La integridad describe el snapshot que se abrió, no una garantía permanente sobre Atlas. Se detectan cambios de run/ledger durante la lectura, pero no se abre una transacción de snapshot distribuida. Una nueva pulsación de **Verificar y abrir datos** relee y verifica. Los filtros sólo actúan sobre el snapshot de sesión; el mismo DataFrame se entrega a tabla, velas y volumen. Una nueva lectura fallida elimina el snapshot anterior de la vista.
+
+El lector carga la extracción seleccionada en memoria. No hay paginación de la tabla desde Atlas, monitor continuo de cambios ni soporte para grandes volúmenes probado en servicios reales. La configuración del servidor enlaza a `127.0.0.1`, mantiene protecciones CORS/XSRF y desactiva telemetría. No hay autenticación ni despliegue multiusuario.

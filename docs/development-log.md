@@ -1,5 +1,17 @@
 # Registro de desarrollo
 
+## HBT-CEN-002 — 22 de octubre de 2026
+
+- Base comprobada: `c046f7bfd8fbf25170d3d49705375684b86ba4ee`, sin avances en `main` al iniciar. Lectura dirigida de modelos, coordinador, estado, adaptador, ledger, raw, verificación y pruebas relacionadas. MTE v2 aplicado mediante revisión acotada y validación incremental. No se encontraron instrucciones `AGENTS.md` aplicables.
+- Se conserva el Application Core y su protocolo. El dashboard Streamlit usa una fachada de sesión que delega inicio/reanudación/consulta al core existente, mantiene el directorio estable y consume cada envío explícito una sola vez. Los perfiles congelados y credenciales están en sesión, sin cambiar el entorno ni usar cachés compartidas.
+- Conexiones explícitas con pruebas separadas de formato, ping Atlas y una operación Massive acotada. Ping no equivale a escritura; plan declarado no equivale a capacidad observada. Errores publicados mediante códigos y mensajes locales seguros.
+- Separación mínima de identidad/hash y verificación pura en `ingestion/identity.py` e `ingestion/integrity.py`. Las rutas importables anteriores se conservan; el verificador legado sigue guardando su resultado. El lector reutiliza la misma verificación sin escrituras. Las 94 regresiones originales y las del core pasan.
+- Lector canónico con comprobación previa del perfil/destino/solicitud/identidad, selección por ledger, reconstrucción de chunks, hashes y procedencia, comprobación del estado actual de Atlas y detección de cambios durante lectura. Valida OHLCV, ordena UTC, consolida duplicados exactos y rechaza valores incompatibles. El conteo pertenece al lector y no reescribe el histórico.
+- Vista de datos con una única tabla filtrada compartida por el gráfico Plotly de velas y volumen. Serie DEMO sintética, claramente identificada, sin conexiones ni trabajos. Pruebas AppTest cubren perfil protegido, reruns, envíos repetidos, renovación de sesión, bloqueo de perfil, inicio incierto, reanudación y lectura fallida que retira el snapshot anterior.
+- Dependencias de Streamlit, Plotly y pandas añadidas y fijadas en `uv.lock` para Python 3.11. Arranque real del servidor local y recorrido visual del ejemplo: diez barras, filtro desde el 5 de octubre con ocho barras. Capturas del panel guardadas en `docs/images`; no contienen credenciales. El recorrido visual es sintético y no acredita servicios reales.
+- Evidencia externa aportada por el usuario: ChatGPT revisó una copia exacta de `c046f7b` en Linux, CPython 3.11.17 y su `uv.lock`: 140 aprobadas, seis integraciones Atlas omitidas y Ruff aprobado. La suite pasó fuera de restricciones de procesos del sandbox y sin cambios de código. Esta evidencia corresponde a HBT-CEN-001 y no es una ejecución propia de Codex ni una validación Linux de HBT-CEN-002.
+- Codex ejecutó HBT-CEN-002 en Windows / CPython 3.11.15. Resultados detallados en `validation.md` y `validation-results.txt`. No había credenciales Massive/Atlas; integración real pendiente. IA, brokers, multiusuario, análisis avanzados, cancelación y colas excluidos.
+
 ## HBT-CEN-001 — 22 de octubre de 2026
 
 - Lectura dirigida de configuración, Massive, Atlas/ingestion y sus pruebas. No se encontraron `AGENTS.md` aplicables en los ancestros del workspace ni en el árbol de origen. Se aplicó MTE v2 según el encargo: lectura acotada, modificaciones localizadas y evidencia de validación.

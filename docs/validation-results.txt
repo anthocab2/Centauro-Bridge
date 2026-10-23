@@ -32,3 +32,47 @@ Real worker processes and OS locks executed on Windows.
 Real extraction and verification code exercised with controlled HTTP and mongomock.
 No real credential values present in the process environment for this delivery.
 Live Massive + Atlas validation and POSIX execution remain pending.
+
+HBT-CEN-001 — external evidence supplied by the user
+Exact commit: c046f7bfd8fbf25170d3d49705375684b86ba4ee
+Reviewer: ChatGPT; Linux; CPython 3.11.17; dependencies from that uv.lock.
+Reported: 140 passed, 6 Atlas integrations skipped, Ruff passed.
+Full suite ran outside sandbox process restrictions without code changes.
+This is user-supplied external evidence, not a Codex execution. It does not
+validate HBT-CEN-002 on Linux or real Massive + Atlas integration.
+
+HBT-CEN-002 — Codex execution evidence
+Local date: 2026-10-22; Windows; CPython 3.11.15.
+Baseline: c046f7bfd8fbf25170d3d49705375684b86ba4ee
+
+uv sync --locked --python 3.11
+Resolved 54 packages; checked 54 packages. Exit 0.
+
+uv run pytest -q
+190 passed, 6 skipped in 29.53s. Exit 0.
+140 prior cases + 50 new reader/dashboard/connection/presentation cases.
+The six preserved real Atlas integrations remain skipped without credentials.
+
+uv run ruff check .
+All checks passed! Exit 0.
+
+git diff --check
+PASS, exit 0; new files included with intent-to-add before the check.
+
+Compatibility audit
+Seven moved identity/hash/verification helper functions have identical Python
+ASTs to baseline. Core models, coordinator, state, adapter and worker unchanged.
+40 imported files still match the original engine Git blob hashes byte-for-byte.
+Original unit and integration test sources remain unchanged.
+
+Streamlit startup and browser walkthrough
+uv run streamlit run dashboard.py --server.address 127.0.0.1 --server.port 8501 --server.headless true -- --state-dir <isolated local validation directory>
+Server started at http://127.0.0.1:8501. Browser displayed Conexiones and Datos.
+DEMO fixture: 10 synthetic bars, then 8 after filtering from 2026-10-05.
+Observed corresponding chart and table. Screenshots: docs/images/dashboard-*.png.
+No credentials entered; no real jobs, Massive calls or Atlas writes in walkthrough.
+AppTest also verifies submission/reload flows with a fake coordinator and real
+local SQLite. Existing process tests provide actual OS-lock regression coverage.
+
+Pending: real Massive + Atlas extraction, reader opening and exact-request reuse;
+HBT-CEN-002 Linux execution; large-dataset performance measurements.

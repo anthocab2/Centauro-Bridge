@@ -5,7 +5,7 @@
     {
       "path": "pyproject.toml",
       "git_blob_sha": "e57c89ef78a4e389ed6392c8437940bb336becab",
-      "adaptation": "Product metadata, core dependencies, CLI and test configuration."
+      "adaptation": "HBT-CEN-001: product metadata, core dependencies, CLI and tests. HBT-CEN-002: Streamlit, Plotly and pandas dependencies."
     },
     {
       "path": "scripts/real_massive_pagination_test.py",
@@ -65,7 +65,7 @@
     {
       "path": "src/centauro_atlas_bridge/ingestion/page_ledger.py",
       "git_blob_sha": "50afde7d79a8266a9c47622d88da5536daef6820",
-      "adaptation": "Unchanged; exact original Git blob."
+      "adaptation": "Unchanged in HBT-CEN-001. HBT-CEN-002 reexports the original pure page content hash from ingestion/identity.py."
     },
     {
       "path": "src/centauro_atlas_bridge/ingestion/pipeline.py",
@@ -75,7 +75,7 @@
     {
       "path": "src/centauro_atlas_bridge/ingestion/raw.py",
       "git_blob_sha": "e58784e69669f096a60e20705b839e5e48582892",
-      "adaptation": "Unchanged; exact original Git blob."
+      "adaptation": "Unchanged in HBT-CEN-001. HBT-CEN-002 moves pure hash/key functions to ingestion/identity.py and preserves public imports."
     },
     {
       "path": "src/centauro_atlas_bridge/ingestion/recovery.py",
@@ -90,7 +90,7 @@
     {
       "path": "src/centauro_atlas_bridge/ingestion/verification.py",
       "git_blob_sha": "952e40a3c04471051134029460fe864591761c7d",
-      "adaptation": "Unchanged; exact original Git blob."
+      "adaptation": "Unchanged in HBT-CEN-001. HBT-CEN-002 separates pure evidence verification into ingestion/integrity.py; this wrapper preserves Atlas reads and verification status writes."
     },
     {
       "path": "src/centauro_atlas_bridge/models/__init__.py",
@@ -100,7 +100,7 @@
     {
       "path": "src/centauro_atlas_bridge/sources/massive.py",
       "git_blob_sha": "e8e36a42f175b5998a957eb13fe21c804cce784c",
-      "adaptation": "Unchanged; exact original Git blob."
+      "adaptation": "Unchanged in HBT-CEN-001. HBT-CEN-002 reexports the original pure extraction identity from ingestion/identity.py."
     },
     {
       "path": "tests/__init__.py",
@@ -235,7 +235,21 @@
     {
       "path": "uv.lock",
       "git_blob_sha": "2cb89dfbaafe35faabfdaa2fd5d5abd2ba454a8c",
-      "adaptation": "Regenerated for the product dependencies on Python 3.11."
+      "adaptation": "Dependency lock updated for HBT-CEN-001 core and HBT-CEN-002 dashboard; Python 3.11."
     }
-  ]
+  ],
+  "hbt_cen_002": {
+    "baseline_commit": "c046f7bfd8fbf25170d3d49705375684b86ba4ee",
+    "unchanged_original_files": 40,
+    "pure_functions_ast_verified": [
+      "calculate_payload_hash",
+      "calculate_ingestion_key",
+      "calculate_page_content_hash",
+      "build_extraction_id",
+      "_add_error",
+      "_base_pagination",
+      "_verify_page"
+    ],
+    "note": "Original blob hashes remain provenance references, not hashes of adapted files. No original regression tests changed."
+  }
 }

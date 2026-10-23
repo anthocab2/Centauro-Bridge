@@ -8,32 +8,13 @@ from pymongo.errors import DuplicateKeyError
 
 from centauro_atlas_bridge.atlas.client import create_atlas_client
 from centauro_atlas_bridge.config import get_database_name
-from centauro_atlas_bridge.ingestion.raw import (
-    calculate_payload_hash,
+from centauro_atlas_bridge.ingestion.identity import (
+    calculate_page_content_hash,
 )
 
 PAGE_LEDGER_COLLECTION = "ingestion_page_ledger"
 
-
-def calculate_page_content_hash(
-    payload: Any,
-) -> str:
-    """Hash only the source records that form one logical page."""
-    if not isinstance(payload, dict):
-        raise TypeError(
-            "Page payload must be a dictionary"
-        )
-
-    results = payload.get("results")
-
-    if not isinstance(results, list):
-        raise TypeError(
-            "Page payload must contain a results list"
-        )
-
-    return calculate_payload_hash(
-        results
-    )
+__all__ = ["PAGE_LEDGER_COLLECTION", "calculate_page_content_hash", "register_canonical_page"]
 
 
 def register_canonical_page(

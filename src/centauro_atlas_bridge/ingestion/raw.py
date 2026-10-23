@@ -1,7 +1,5 @@
 """Raw data ingestion with provenance and idempotency."""
 
-import hashlib
-import json
 from datetime import UTC, datetime
 from typing import Any
 
@@ -10,52 +8,12 @@ from pymongo import ReturnDocument, UpdateOne
 from centauro_atlas_bridge.atlas.client import create_atlas_client
 from centauro_atlas_bridge.config import get_database_name
 from centauro_atlas_bridge.ingestion.chunking import chunk_payload
+from centauro_atlas_bridge.ingestion.identity import (
+    calculate_ingestion_key,
+    calculate_payload_hash,
+)
 
 RAW_COLLECTION = "raw_ingestion"
-
-
-def calculate_payload_hash(payload: Any) -> str:
-    """Create a deterministic SHA-256 hash for a payload."""
-    serialized = json.dumps(
-        payload,
-        sort_keys=True,
-        separators=(",", ":"),
-        default=str,
-    )
-
-    return hashlib.sha256(
-        serialized.encode("utf-8")
-    ).hexdigest()
-
-
-def calculate_ingestion_key(
-    source: str,
-    endpoint: str,
-    parameters: dict[str, Any],
-    payload_hash: str,
-    pagination: dict[str, Any] | None = None,
-    fragment: str | None = None,
-) -> str:
-    """Create a deterministic identity for one raw ingestion payload."""
-    identity = {
-        "source": source,
-        "endpoint": endpoint,
-        "parameters": parameters,
-        "payload_hash": payload_hash,
-        "pagination": pagination,
-        "fragment": fragment,
-    }
-
-    serialized = json.dumps(
-        identity,
-        sort_keys=True,
-        separators=(",", ":"),
-        default=str,
-    )
-
-    return hashlib.sha256(
-        serialized.encode("utf-8")
-    ).hexdigest()
 
 
 def build_raw_document(

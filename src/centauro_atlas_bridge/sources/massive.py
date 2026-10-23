@@ -1,7 +1,5 @@
 """Massive REST API source adapter for Centauro."""
 
-import hashlib
-import json
 from contextlib import suppress
 from copy import deepcopy
 from typing import Any
@@ -18,6 +16,9 @@ from centauro_atlas_bridge.ingestion.checkpoints import (
     save_checkpoint,
 )
 from centauro_atlas_bridge.ingestion.http_client import fetch_json
+from centauro_atlas_bridge.ingestion.identity import (
+    build_extraction_id,
+)
 from centauro_atlas_bridge.ingestion.page_ledger import (
     calculate_page_content_hash,
     register_canonical_page,
@@ -48,31 +49,6 @@ AUTH_QUERY_KEYS = {
 
 class MassiveResponseError(RuntimeError):
     """Raised when Massive returns an invalid logical response."""
-
-
-def build_extraction_id(
-    ticker: str,
-    start_date: str,
-    end_date: str,
-    adjusted: bool,
-) -> str:
-    """Create a deterministic ID for one Massive extraction request."""
-    identity = {
-        "ticker": ticker,
-        "start_date": start_date,
-        "end_date": end_date,
-        "adjusted": adjusted,
-    }
-
-    serialized = json.dumps(
-        identity,
-        sort_keys=True,
-        separators=(",", ":"),
-    )
-
-    return hashlib.sha256(
-        serialized.encode("utf-8")
-    ).hexdigest()
 
 
 def validate_massive_url(

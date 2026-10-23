@@ -1,6 +1,6 @@
 # Centauro Bridge
 
-Application Core para ejecutar extracciones diarias de Massive hacia MongoDB Atlas como trabajos independientes. HBT-CEN-001 incluye CLI, configuración fija por trabajo, estado persistente, exclusión entre trabajadores, recuperación y verificación. Requiere Python 3.11.
+Aplicación local para ejecutar extracciones diarias de Massive hacia MongoDB Atlas y explorar sus barras OHLCV. HBT-CEN-002 añade un dashboard Streamlit y un lector canónico sobre el Application Core de HBT-CEN-001: CLI, configuración fija por trabajo, estado persistente, exclusión entre trabajadores, recuperación y verificación. Requiere Python 3.11.
 
 El motor ya guarda los datos en Atlas. El adaptador conserva esa persistencia única y sus identidades, hashes, ledger de páginas y checkpoints. Esta versión sigue acoplada a Atlas.
 
@@ -10,6 +10,16 @@ Desde una copia de este repositorio, con `uv` disponible:
 
 ```powershell
 uv sync --locked --python 3.11
+uv run streamlit run dashboard.py
+```
+
+Abra `http://127.0.0.1:8501`. Configure el perfil en **Conexiones**, envíe una solicitud en **Extracciones** y pulse **Verificar y abrir datos** en **Datos**. Las credenciales se introducen en campos protegidos y permanecen en la sesión local. El botón **Explorar datos de prueba** permite recorrer el panel con una serie sintética, sin conexiones ni trabajos reales.
+
+La [guía de uso](docs/user-guide.md) explica instalación, estado compartido con la CLI, verificación, filtros y errores habituales. La tabla y el gráfico Plotly usan el mismo conjunto filtrado. Antes de abrir una extracción, el lector comprueba en Atlas la evidencia canónica actual; una verificación histórica de SQLite no basta.
+
+La CLI sigue disponible:
+
+```powershell
 uv run centauro-bridge --help
 ```
 
@@ -54,7 +64,7 @@ Cada trabajo expone solicitud, perfil sin secretos, fechas UTC, transiciones, id
 | `verification_status` | `not_verified`, `running`, `invalid` o `verified` |
 | `mode` / `result.mode` | `new`, `resumed`, `reused` o `recovered` según evidencia previa |
 | `result.data_status` | `empty`, `present` o `unknown`, basado en la verificación |
-| `result.bar_count` | `null`: aún no hay lector analítico canónico |
+| `result.bar_count` | `null` en el histórico del core; el lector calcula y presenta un conteo separado sin reescribirlo |
 
 Un retorno `[]` del extractor puede ser una reutilización satisfactoria; se verifica antes de marcar éxito. `declared_plan` es sólo una declaración del perfil. `capability` distingue una petición efectivamente completada de una capacidad desconocida; reutilizar datos no comprueba acceso actual a Massive. El plan exacto permanece desconocido y no se deduce de 401, 403 o 429.
 
@@ -68,10 +78,10 @@ uv run ruff check .
 git diff --check
 ```
 
-La suite sin red conserva las 94 regresiones unitarias del motor e incorpora pruebas del core con procesos reales y E/S simulada. Las seis pruebas de integración con Atlas se identifican como pendientes cuando no se habilitan explícitamente. Consulte [validación y prueba real pequeña](docs/validation.md).
+La suite sin red conserva las 94 regresiones unitarias del motor e incorpora pruebas del core con procesos reales, lector, conexiones y Streamlit AppTest. Resultado HBT-CEN-002 en Windows: **190 passed, 6 skipped**; Ruff aprobado. Las seis pruebas de integración con Atlas siguen pendientes cuando no se habilitan explícitamente. Consulte [validación, capturas y prueba real pequeña](docs/validation.md).
 
 ## Alcance
 
 Procedencia: [centauro-atlas-bridge](https://github.com/anthocab2/centauro-atlas-bridge), commit `ca9e9270d4553ebaea80096e019974eae697fe3e`. Se inicia una historia Git independiente. No se incluyen historial privado, `.env` reales, investigación, documentación privada ni SEC/WKC. [Historia y selección](docs/project-story.md), [arquitectura](docs/architecture.md) y [registro de desarrollo](docs/development-log.md).
 
-HBT-CEN-002 podrá conectar un dashboard a este core. Streamlit, lector analítico, IA, brokers, multiusuario, cancelación y cola de trabajos todavía no están implementados. La integración real Massive + Atlas sigue pendiente en esta entrega por falta de credenciales configuradas.
+El dashboard y el lector están implementados y probados con evidencia sintética y E/S simulada. La integración real Massive + Atlas sigue pendiente por falta de credenciales configuradas. IA, brokers, multiusuario, análisis avanzados, cancelación y colas quedan fuera del alcance. Para HBT-CEN-003 quedan la validación real del recorrido y las mejoras que se acuerden después de ella.
