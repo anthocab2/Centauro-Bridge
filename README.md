@@ -4,6 +4,15 @@ Aplicación local para ejecutar extracciones diarias de Massive hacia MongoDB At
 
 El motor ya guarda los datos en Atlas. El adaptador conserva esa persistencia única y sus identidades, hashes, ledger de páginas y checkpoints. Esta versión sigue acoplada a Atlas.
 
+## Project Charter — Stage 2
+
+La entrega de planificación de Holberton está en
+[docs/stage_2](docs/stage_2/README.md). Incluye el
+[Project Charter completo en inglés](docs/stage_2/PROJECT_CHARTER.md), con
+objetivos SMART, roles, alcance, riesgos y cronograma, y la
+[respuesta de la tarea 0](docs/stage_2/0-project_objectives.md).
+El cronograma es una propuesta pendiente de revisión con el equipo y el mentor.
+
 ## Ejecutar
 
 Desde una copia de este repositorio, con `uv` disponible:
