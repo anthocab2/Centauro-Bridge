@@ -1,0 +1,34 @@
+sequenceDiagram
+    actor User
+    participant UI as Dashboard
+    participant Reader as Canonical reader
+    participant Atlas
+    participant Verify as Pure verifier and reconstruction
+    participant Frame as Filtered DataFrame
+    User->>UI: Select extraction and verify/open
+    UI->>Reader: read_extraction(profile, job)
+    Reader->>Reader: Validate profile and extraction<br/>identity
+    alt Selection mismatch
+        Reader-->>UI: ReadingError(selection_mismatch)
+        UI-->>User: Safe diagnostic, no dataset
+    else Selection valid
+        Reader->>Atlas: Read run and ordered page ledger
+        Reader->>Atlas: Read only canonical IDs for this<br/>extraction
+        Reader->>Verify: Verify exact evidence, reconstruct and<br/>validate bars
+        alt Missing, altered, invalid, or conflicting evidence
+            Verify-->>Reader: Stable diagnostic code
+            Reader-->>UI: ReadingError
+            UI-->>User: Block data view
+        else Valid evidence
+            Reader->>Atlas: Read run and ledger again
+            alt Metadata changed during read
+                Reader-->>UI: ReadingError(evidence_changed)
+            else Evidence unchanged
+                Reader-->>UI: Immutable CanonicalDataset
+                User->>UI: Set inclusive UTC dates
+                UI->>Frame: dataset_frame(dataset, start, end)
+                Frame-->>UI: Same rows for chart and table
+                UI-->>User: Candles, volume and table, or valid<br/>empty state
+            end
+        end
+    end

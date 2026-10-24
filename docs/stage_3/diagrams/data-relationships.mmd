@@ -1,0 +1,39 @@
+erDiagram
+    LOCAL_JOB }o..o| INGESTION_RUN : "extraction_id logical link"
+    INGESTION_RUN ||..o{ PAGE_LEDGER : "extraction_id"
+    INGESTION_RUN ||..o| CHECKPOINT : "source endpoint extraction_id"
+    PAGE_LEDGER ||..|{ RAW_CAPTURE : "canonical_document_ids"
+    LOCAL_JOB {
+      string job_id PK
+      string state
+      string document_JSON
+    }
+    INGESTION_RUN {
+      ObjectId _id PK
+      string extraction_id UK
+      object parameters
+      string status
+      string verification_status
+    }
+    PAGE_LEDGER {
+      ObjectId _id PK
+      string extraction_id
+      int page_number
+      array canonical_document_ids
+      string canonical_payload_hash
+    }
+    RAW_CAPTURE {
+      ObjectId _id PK
+      string ingestion_key UK
+      object pagination
+      object payload
+      string payload_hash
+    }
+    CHECKPOINT {
+      ObjectId _id PK
+      string source
+      string endpoint
+      string extraction_id
+      string cursor
+      object metadata
+    }

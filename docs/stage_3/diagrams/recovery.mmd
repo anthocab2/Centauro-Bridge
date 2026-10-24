@@ -1,0 +1,32 @@
+sequenceDiagram
+    actor User
+    participant Core as Coordinator and State
+    participant Worker
+    participant Engine
+    participant Atlas
+    User->>Core: Query status after interruption
+    Core->>Core: Acquire lock and check PID, creation<br/>time, token
+    alt Worker confirmed dead
+        Core->>Core: Mark active attempt interrupted
+    else Alive or visibility unknown
+        Core-->>User: Preserve active state, do not overlap
+    end
+    User->>Core: resume(job_id, original profile)
+    Core->>Core: Require failed/interrupted and matching<br/>public target
+    Core->>Worker: Spawn using original request and<br/>resumed_from
+    Worker->>Worker: Lock, recheck eligibility, create new<br/>job ID
+    Worker->>Engine: Execute same extraction ID
+    Engine->>Atlas: Read run and checkpoint
+    alt Completed checkpoint
+        Engine->>Atlas: Verify evidence and reconcile run when<br/>needed
+        Note over Engine,Atlas: Reused or recovered mode, provider<br/>access remains unknown
+    else Partial progress or no checkpoint
+        Engine->>Engine: Continue ingestion from recorded<br/>progress
+        Engine->>Atlas: Persist remaining evidence and verify
+    end
+    alt Valid evidence
+        Worker->>Core: Persist verified outcome
+    else Inconsistent evidence or operational failure
+        Worker->>Core: Persist failed outcome and safe<br/>diagnostic
+    end
+    Core-->>User: New attempt linked to the original

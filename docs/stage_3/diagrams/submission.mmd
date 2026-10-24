@@ -1,0 +1,40 @@
+sequenceDiagram
+    actor User
+    participant Caller as Dashboard or CLI
+    participant Core as Coordinator
+    participant Worker
+    participant Local as Lock and SQLite
+    participant Engine as Adapter and ingestion engine
+    participant Massive
+    participant Atlas
+    User->>Caller: Submit fixed profile and request
+    Caller->>Core: start(profile, request)
+    Core->>Worker: Spawn with public input and explicit<br/>secret environment
+    Worker->>Local: Try nonblocking installation lock
+    alt Lock unavailable or active owner still visible
+        Worker-->>Core: busy, active job ID when known
+        Core-->>Caller: Busy receipt
+    else Lock acquired and no active owner
+        Worker->>Local: Recover dead jobs, save new preparing<br/>job
+        Worker-->>Core: accepted, job_id, extraction_id
+        Core-->>Caller: Receipt, not completion
+        Worker->>Engine: execute(request, progress)
+        Engine->>Local: executing
+        loop Each required page for a new or resumed extraction
+            Engine->>Massive: Authenticated HTTPS GET
+            Massive-->>Engine: Validated page and optional next URL
+            Engine->>Atlas: Upsert raw fragments, register ledger,<br/>save checkpoint
+        end
+        Engine->>Local: verifying, execution completed
+        Engine->>Atlas: Verify stored extraction evidence
+        alt Evidence valid
+            Engine-->>Worker: verified result
+            Worker->>Local: verified, result, finished_at
+        else Error or invalid evidence
+            Worker->>Local: failed and safe diagnostic
+        end
+        Worker->>Local: Release lock when worker exits
+    end
+    User->>Caller: Refresh status
+    Caller->>Local: Read/reconcile state
+    Local-->>Caller: Current job document

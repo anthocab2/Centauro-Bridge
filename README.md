@@ -13,6 +13,14 @@ objetivos SMART, roles, alcance, riesgos y cronograma, y la
 [respuesta de la tarea 0](docs/stage_2/0-project_objectives.md).
 El cronograma es una propuesta pendiente de revisión con el equipo y el mentor.
 
+## Technical Documentation — Stage 3
+
+La entrega de Stage 3 está en [docs/stage_3](docs/stage_3/README.md):
+[documentación técnica completa en inglés](docs/stage_3/TECHNICAL_DOCUMENTATION.md),
+[historias MoSCoW y mockups de la tarea 0](docs/stage_3/0-user_stories_and_mockups.md),
+arquitectura, clases, datos, secuencias, contratos de API y planes de SCM/QA.
+Los mockups usan valores sintéticos; la validación real de servicios sigue pendiente.
+
 ## Ejecutar
 
 Desde una copia de este repositorio, con `uv` disponible:

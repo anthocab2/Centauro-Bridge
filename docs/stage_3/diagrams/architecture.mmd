@@ -1,0 +1,23 @@
+flowchart TB
+    U[Local user] --> B[Browser]
+    subgraph PC[Single local installation]
+      B --> UI[Streamlit dashboard]
+      CLI[centauro-bridge CLI] --> CORE[Application Coordinator]
+      UI --> SESSION[DashboardSession]
+      SESSION --> CORE
+      CORE --> WORKER[Detached worker]
+      WORKER --> LOCK[OS file lock]
+      CORE --> STATE[(SQLite job state)]
+      WORKER --> STATE
+      WORKER --> ADAPTER[MassiveAtlasAdapter]
+      ADAPTER --> ENGINE[Existing ingestion engine]
+      UI --> READ[Canonical reader]
+      READ --> FRAME[Shared filtered DataFrame]
+      FRAME --> VIEWS[Plotly chart and table]
+      UI --> PROBE[Explicit connection probes]
+    end
+    ENGINE -->|HTTPS GET| MASSIVE[Massive API]
+    ENGINE -->|PyMongo writes and verification| ATLAS[(MongoDB Atlas)]
+    READ -->|Read canonical evidence| ATLAS
+    PROBE -. One-day GET .-> MASSIVE
+    PROBE -. Ping only .-> ATLAS

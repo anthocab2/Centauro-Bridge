@@ -1,0 +1,65 @@
+classDiagram
+    class Request {
+      +str ticker
+      +str start_date
+      +str end_date
+      +bool adjusted
+      +public() dict
+    }
+    class Profile {
+      +str profile_id
+      +str destination_id
+      +str database
+      +public() dict
+      +worker_environment() dict
+    }
+    class Coordinator {
+      +start(profile, request) dict
+      +resume(job_id, profile) dict
+    }
+    class State {
+      +add(document)
+      +update(job_id, changes)
+      +status(job_id)
+      +recover()
+    }
+    class DashboardSession {
+      +configure(profile, coordinator)
+      +submit(coordinator, token)
+      +refresh(coordinator)
+      +prepare_another(coordinator)
+    }
+    class MassiveAtlasAdapter {
+      +extraction_id(request) str
+      +execute(request, progress) dict
+    }
+    class CanonicalDataset {
+      +str extraction_id
+      +tuple bars
+      +tuple captures
+      +str snapshot_id
+      +int bar_count
+    }
+    class Bar {
+      +datetime timestamp
+      +number open
+      +number high
+      +number low
+      +number close
+      +number volume
+      +tuple pages
+    }
+    class Capture {
+      +int page
+      +str payload_hash
+      +tuple document_ids
+      +tuple captured_at
+    }
+    DashboardSession --> Coordinator
+    Coordinator --> State
+    Coordinator --> Profile
+    Coordinator --> Request
+    MassiveAtlasAdapter --> Request
+    CanonicalDataset *-- Bar
+    CanonicalDataset *-- Capture
+    CanonicalDataset --> Request
